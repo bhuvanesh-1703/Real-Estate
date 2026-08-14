@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
+import AIChatModal from './components/AIChatModal';
+import Home from './pages/Home';
+import PropertyDetails from './pages/PropertyDetails';
+import AdminDashboard from './pages/AdminDashboard';
+
+function MainApp() {
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSelectProperty = (prop) => {
+    setSelectedProperty(prop);
+    navigate(`/properties/${prop.slug}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenBooking = () => {
+    const el = document.getElementById('site-visit');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById('site-visit')?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0B0F17] flex flex-col font-sans selection:bg-[#D4AF37] selection:text-black">
+      
+      {/* Navbar Header */}
+      <Navbar
+        onOpenAiChat={() => setIsAiModalOpen(true)}
+        onOpenBooking={handleOpenBooking}
+      />
+
+      {/* Main View Routes */}
+      <main className="flex-grow">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                onSelectProperty={handleSelectProperty}
+                onOpenBooking={handleOpenBooking}
+                onOpenAiChat={() => setIsAiModalOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/properties/:slug"
+            element={
+              <PropertyDetails
+                property={selectedProperty}
+                onOpenBooking={handleOpenBooking}
+                onSelectProperty={handleSelectProperty}
+              />
+            }
+          />
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Floating Action Elements */}
+      <FloatingWhatsApp
+        selectedPropertyTitle={selectedProperty?.title}
+      />
+
+      {/* AI Chat Advisor Assistant */}
+      <AIChatModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onSelectProperty={handleSelectProperty}
+      />
+
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <MainApp />
+    </Router>
+  );
+}
