@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const verifyAdmin = require('../middleware/verifyAdmin');
 const {
   getLeads,
   createLead,
@@ -7,9 +8,13 @@ const {
   deleteLead
 } = require('../controllers/leadController');
 
-router.get('/', getLeads);
+// Public lead submission route
 router.post('/', createLead);
-router.patch('/:id', updateLeadStatus);
-router.delete('/:id', deleteLead);
+
+// Admin protected routes
+router.get('/', verifyAdmin, getLeads);
+router.patch('/:id', verifyAdmin, updateLeadStatus);
+router.put('/:id', verifyAdmin, updateLeadStatus);
+router.delete('/:id', verifyAdmin, deleteLead);
 
 module.exports = router;

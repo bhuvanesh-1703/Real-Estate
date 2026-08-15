@@ -91,6 +91,15 @@ export default function AdminDashboard() {
               <Plus className="w-4 h-4" />
               Add New Property
             </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem('admin_token');
+                window.location.href = '/admin/login';
+              }}
+              className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors"
+            >
+              Logout
+            </button>
           </div>
         </div>
 

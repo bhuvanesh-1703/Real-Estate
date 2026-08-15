@@ -11,8 +11,11 @@ connectDB();
 
 const app = express();
 
-// Global Middleware
-app.use(cors());
+// Global Middleware with Locked down CORS
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -27,11 +30,13 @@ app.get('/api/health', (req, res) => {
 });
 
 // Import & Mount Modular Routes
+const authRoutes = require('./routes/authRoutes');
 const propertyRoutes = require('./routes/propertyRoutes');
 const leadRoutes = require('./routes/leadRoutes');
 const visitRoutes = require('./routes/visitRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
+app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/leads', leadRoutes);
 app.use('/api/visits', visitRoutes);

@@ -1,4 +1,29 @@
-const API_BASE_URL = 'https://real-estate-6ujl.onrender.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
+/**
+ * Helper to retrieve Bearer token headers for protected admin calls
+ */
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('admin_token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
+/**
+ * Admin Login API call
+ */
+export async function loginAdminAPI(credentials) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('[API Client] Admin login failed:', error.message);
+    return { success: false, message: error.message };
+  }
+}
 
 /**
  * Fetch all properties from backend with optional type/search filter
@@ -35,7 +60,7 @@ export async function fetchPropertyBySlugAPI(slug) {
 }
 
 /**
- * Post a new lead to backend CRM
+ * Post a new lead to backend CRM (Public)
  */
 export async function createLeadAPI(leadData) {
   try {
@@ -52,7 +77,7 @@ export async function createLeadAPI(leadData) {
 }
 
 /**
- * Book VIP Site Visit
+ * Book VIP Site Visit (Public)
  */
 export async function createSiteVisitAPI(visitData) {
   try {
@@ -69,7 +94,7 @@ export async function createSiteVisitAPI(visitData) {
 }
 
 /**
- * AI Chat Assistant query
+ * AI Chat Assistant query (Public)
  */
 export async function sendAiChatAPI(message) {
   try {
@@ -86,7 +111,7 @@ export async function sendAiChatAPI(message) {
 }
 
 /**
- * AI Recommendation query
+ * AI Recommendation query (Public)
  */
 export async function sendAiRecommendAPI(prompt) {
   try {
@@ -103,11 +128,15 @@ export async function sendAiRecommendAPI(prompt) {
 }
 
 /**
- * CRM Leads list (for Admin)
+ * CRM Leads list (Admin protected)
  */
 export async function fetchLeadsAPI() {
   try {
-    const res = await fetch(`${API_BASE_URL}/leads`);
+    const res = await fetch(`${API_BASE_URL}/leads`, {
+      headers: {
+        ...getAuthHeaders()
+      }
+    });
     if (!res.ok) throw new Error('Leads API Error');
     const json = await res.json();
     return json.data || [];
@@ -118,14 +147,70 @@ export async function fetchLeadsAPI() {
 }
 
 /**
- * Add New Property (for Admin)
+ * Add New Property (Admin protected)
  */
 export async function createPropertyAPI(propertyData) {
   try {
     const res = await fetch(`${API_BASE_URL}/properties`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(propertyData)
+    });
+    return await res.json();
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Delete Property (Admin protected)
+ */
+export async function deletePropertyAPI(id) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/properties/${id}`, {
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
+    });
+    return await res.json();
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Update Lead Status (Admin protected)
+ */
+export async function updateLeadStatusAPI(id, status) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/leads/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify({ status })
+    });
+    return await res.json();
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Delete Lead (Admin protected)
+ */
+export async function deleteLeadAPI(id) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/leads/${id}`, {
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
     return await res.json();
   } catch (error) {

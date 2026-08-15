@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const verifyAdmin = require('../middleware/verifyAdmin');
 const {
   getVisits,
   createVisit,
   updateVisitStatus
 } = require('../controllers/visitController');
 
-router.get('/', getVisits);
+// Public site visit booking
 router.post('/', createVisit);
-router.patch('/:id', updateVisitStatus);
+
+// Admin protected routes
+router.get('/', verifyAdmin, getVisits);
+router.patch('/:id', verifyAdmin, updateVisitStatus);
+router.put('/:id', verifyAdmin, updateVisitStatus);
 
 module.exports = router;

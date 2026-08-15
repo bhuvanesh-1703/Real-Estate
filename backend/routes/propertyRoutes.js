@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const verifyAdmin = require('../middleware/verifyAdmin');
 const {
   getProperties,
   getPropertyBySlug,
@@ -8,10 +9,13 @@ const {
   deleteProperty
 } = require('../controllers/propertyController');
 
+// Public routes
 router.get('/', getProperties);
 router.get('/:slug', getPropertyBySlug);
-router.post('/', createProperty);
-router.put('/:id', updateProperty);
-router.delete('/:id', deleteProperty);
+
+// Admin protected routes
+router.post('/', verifyAdmin, createProperty);
+router.put('/:id', verifyAdmin, updateProperty);
+router.delete('/:id', verifyAdmin, deleteProperty);
 
 module.exports = router;

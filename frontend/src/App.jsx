@@ -7,6 +7,8 @@ import AIChatModal from './components/AIChatModal';
 import Home from './pages/Home';
 import PropertyDetails from './pages/PropertyDetails';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function MainApp() {
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -63,7 +65,15 @@ function MainApp() {
               />
             }
           />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
 
