@@ -1,58 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --font-heading: 'Outfit', 'Inter', system-ui, sans-serif;
+    --font-heading: 'Fraunces', serif;
     --font-body: 'Inter', system-ui, sans-serif;
-    --color-gold-accent: #D4AF37;
-    --color-slate-dark: #0B0F17;
-    --color-slate-card: #151C28;
-    --color-slate-border: rgba(255, 255, 255, 0.08);
+    --color-brass-accent: #B08D57;
+    --color-sage-accent: #5C7A63;
+    --color-forest-dark: #0D1410;
+    --color-forest-card: #16231C;
+    --color-text-linen: #EFEAE1;
+    --color-text-muted: #8A9186;
   }
 
   body {
     font-family: var(--font-body);
-    background-color: #0B0F17;
-    color: #F3F4F6;
+    background-color: #0D1410;
+    color: #EFEAE1;
     overflow-x: hidden;
     scroll-behavior: smooth;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, .font-heading {
     font-family: var(--font-heading);
+  }
+
+  ::selection {
+    background-color: #B08D57;
+    color: #0D1410;
   }
 }
 
-/* Custom Utilities for Luxury Aesthetic */
+/* Blueprint Grid Pattern Utility */
+.blueprint-grid {
+  background-image: linear-gradient(to right, rgba(176, 141, 87, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(176, 141, 87, 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Custom Utilities for Forest + Brass Aesthetic */
 .glass-panel {
-  background: rgba(21, 28, 40, 0.7);
+  background: rgba(22, 35, 28, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(176, 141, 87, 0.2);
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: rgba(22, 35, 28, 0.6);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(176, 141, 87, 0.15);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  background: rgba(30, 41, 59, 0.6);
-  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(22, 35, 28, 0.85);
+  border-color: rgba(176, 141, 87, 0.5);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
 }
 
-.gold-gradient-text {
-  background: linear-gradient(135deg, #FFF 0%, #D4AF37 50%, #AA7C11 100%);
+.gold-gradient-text, .brass-gradient-text {
+  background: linear-gradient(135deg, #EFEAE1 0%, #B08D57 60%, #8A6D3B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-border-glow {
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+.gold-border-glow, .brass-border-glow {
+  box-shadow: 0 0 20px rgba(176, 141, 87, 0.3);
 }
 
 /* Custom Scrollbar */
@@ -60,12 +74,12 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0F17;
+  background: #0D1410;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: #203127;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37;
+  background: #B08D57;
 }

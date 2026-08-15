@@ -54,7 +54,7 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
       />
 
       {/* 2. FEATURED PROPERTIES */}
-      <section id="properties" className="py-24 bg-[#0B0F17] relative">
+      <section id="properties" className="py-24 bg-[#0D1410] blueprint-grid relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">

@@ -34,7 +34,7 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] flex flex-col font-sans selection:bg-[#D4AF37] selection:text-black">
+    <div className="min-h-screen bg-[#0D1410] flex flex-col font-sans selection:bg-[#B08D57] selection:text-[#0D1410]">
       
       {/* Navbar Header */}
       <Navbar

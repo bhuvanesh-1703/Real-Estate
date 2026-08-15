@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calculator, Sparkles, TrendingUp, DollarSign, PieChart as PieIcon } from 'lucide-react';
+import { Calculator, Sparkles } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 export default function InvestmentCalc() {
@@ -44,22 +44,22 @@ export default function InvestmentCalc() {
     { name: 'Total Interest', value: calculations.totalInterest }
   ];
 
-  const COLORS = ['#3B82F6', '#D4AF37', '#F59E0B'];
+  const COLORS = ['#5C7A63', '#B08D57', '#8A6D3B'];
 
   return (
-    <section id="calculator" className="py-24 bg-[#090D14] relative">
+    <section id="calculator" className="py-24 bg-[#0D1410] blueprint-grid relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="text-center space-y-3 max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-[#D4AF37]/10 px-3 py-1 rounded-full text-xs font-semibold text-[#D4AF37] border border-[#D4AF37]/30">
+          <div className="inline-flex items-center gap-2 bg-[#B08D57]/10 px-3.5 py-1 rounded-full text-xs font-mono font-semibold text-[#B08D57] border border-[#B08D57]/30">
             <Calculator className="w-3.5 h-3.5" />
             FINANCIAL INTELLIGENCE
           </div>
-          <h2 className="font-heading text-3xl sm:text-5xl font-extrabold text-white">
+          <h2 className="font-serif-fraunces text-3xl sm:text-5xl font-extrabold text-[#EFEAE1]">
             Real Estate Investment & EMI Calculator
           </h2>
-          <p className="text-xs sm:text-sm text-gray-400">
+          <p className="text-xs sm:text-sm text-[#8A9186] font-light">
             Simulate loan cashflows, rental yield rates, and capital appreciation potential before committing capital.
           </p>
         </div>
@@ -67,16 +67,16 @@ export default function InvestmentCalc() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Inputs Column */}
-          <div className="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 space-y-6">
-            <h3 className="font-heading text-lg font-bold text-white border-b border-white/10 pb-4">
+          <div className="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-[#B08D57]/20 space-y-6">
+            <h3 className="font-serif-fraunces text-lg font-bold text-[#EFEAE1] border-b border-white/10 pb-4">
               Financial Assumptions
             </h3>
 
             {/* Property Price */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs">
+              <div className="flex justify-between text-xs font-mono">
                 <label className="text-gray-300 font-medium">Property Price</label>
-                <span className="font-bold text-[#D4AF37]">₹{(propertyPrice / 100000).toFixed(2)} Lakhs</span>
+                <span className="font-bold text-[#B08D57]">₹{(propertyPrice / 100000).toFixed(2)} Lakhs</span>
               </div>
               <input
                 type="range"
@@ -85,15 +85,15 @@ export default function InvestmentCalc() {
                 step="500000"
                 value={propertyPrice}
                 onChange={(e) => setPropertyPrice(Number(e.target.value))}
-                className="w-full accent-[#D4AF37] bg-gray-700 h-1.5 rounded-lg cursor-pointer"
+                className="w-full accent-[#B08D57] bg-gray-700 h-1.5 rounded-lg cursor-pointer"
               />
             </div>
 
             {/* Down Payment % */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs">
+              <div className="flex justify-between text-xs font-mono">
                 <label className="text-gray-300 font-medium">Down Payment ({downPaymentPercent}%)</label>
-                <span className="font-semibold text-white">₹{(calculations.downPayment / 100000).toFixed(2)} Lakhs</span>
+                <span className="font-semibold text-[#EFEAE1]">₹{(calculations.downPayment / 100000).toFixed(2)} Lakhs</span>
               </div>
               <input
                 type="range"
@@ -102,7 +102,7 @@ export default function InvestmentCalc() {
                 step="5"
                 value={downPaymentPercent}
                 onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
-                className="w-full accent-[#D4AF37] bg-gray-700 h-1.5 rounded-lg cursor-pointer"
+                className="w-full accent-[#B08D57] bg-gray-700 h-1.5 rounded-lg cursor-pointer"
               />
             </div>
 
@@ -115,7 +115,7 @@ export default function InvestmentCalc() {
                   step="0.1"
                   value={interestRate}
                   onChange={(e) => setInterestRate(Number(e.target.value))}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-[#0D1410] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#EFEAE1] focus:outline-none focus:border-[#B08D57]"
                 />
               </div>
 
@@ -125,16 +125,16 @@ export default function InvestmentCalc() {
                   type="number"
                   value={tenureYears}
                   onChange={(e) => setTenureYears(Number(e.target.value))}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+                  className="w-full bg-[#0D1410] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#EFEAE1] focus:outline-none focus:border-[#B08D57]"
                 />
               </div>
             </div>
 
             {/* Monthly Rent Expectation */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs">
+              <div className="flex justify-between text-xs font-mono">
                 <label className="text-gray-300 font-medium">Expected Monthly Rent</label>
-                <span className="font-semibold text-white">₹{expectedRent.toLocaleString()}/mo</span>
+                <span className="font-semibold text-[#EFEAE1]">₹{expectedRent.toLocaleString()}/mo</span>
               </div>
               <input
                 type="range"
@@ -143,25 +143,25 @@ export default function InvestmentCalc() {
                 step="2500"
                 value={expectedRent}
                 onChange={(e) => setExpectedRent(Number(e.target.value))}
-                className="w-full accent-[#D4AF37] bg-gray-700 h-1.5 rounded-lg cursor-pointer"
+                className="w-full accent-[#B08D57] bg-gray-700 h-1.5 rounded-lg cursor-pointer"
               />
             </div>
           </div>
 
           {/* Calculations & Visualization Column */}
-          <div className="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col justify-between space-y-6">
+          <div className="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-[#B08D57]/20 flex flex-col justify-between space-y-6">
             
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Monthly EMI</span>
-                <span className="font-heading font-extrabold text-xl sm:text-2xl text-white">
+              <div className="bg-[#0D1410]/80 p-4 rounded-2xl border border-white/5">
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider block font-mono">Monthly EMI</span>
+                <span className="font-serif-fraunces font-extrabold text-xl sm:text-2xl text-[#EFEAE1]">
                   ₹{calculations.monthlyEmi.toLocaleString()}
                 </span>
               </div>
 
-              <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                <span className="text-[10px] text-gray-400 uppercase tracking-wider block">Gross Rental Yield</span>
-                <span className="font-heading font-extrabold text-xl sm:text-2xl text-[#D4AF37]">
+              <div className="bg-[#0D1410]/80 p-4 rounded-2xl border border-white/5">
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider block font-mono">Gross Rental Yield</span>
+                <span className="font-serif-fraunces font-extrabold text-xl sm:text-2xl text-[#B08D57]">
                   {calculations.grossRentalYield}%
                 </span>
               </div>
@@ -185,7 +185,7 @@ export default function InvestmentCalc() {
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0B0F17', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '11px' }}
+                    contentStyle={{ backgroundColor: '#0D1410', borderColor: 'rgba(176,141,87,0.3)', borderRadius: '12px', fontSize: '11px', color: '#EFEAE1' }}
                     formatter={(val) => `₹${val.toLocaleString()}`}
                   />
                 </PieChart>
@@ -193,27 +193,27 @@ export default function InvestmentCalc() {
             </div>
 
             {/* Breakdown Legend */}
-            <div className="grid grid-cols-3 gap-2 text-[10px] text-gray-400 text-center">
+            <div className="grid grid-cols-3 gap-2 text-[10px] text-gray-400 text-center font-mono">
               <div className="flex items-center justify-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span className="w-2 h-2 rounded-full bg-[#5C7A63]"></span>
                 <span>Loan: ₹{(calculations.loanAmount / 100000).toFixed(1)}L</span>
               </div>
               <div className="flex items-center justify-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#D4AF37]"></span>
+                <span className="w-2 h-2 rounded-full bg-[#B08D57]"></span>
                 <span>Down: ₹{(calculations.downPayment / 100000).toFixed(1)}L</span>
               </div>
               <div className="flex items-center justify-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span className="w-2 h-2 rounded-full bg-[#8A6D3B]"></span>
                 <span>Interest: ₹{(calculations.totalInterest / 100000).toFixed(1)}L</span>
               </div>
             </div>
 
             {/* AI Generated Insight */}
-            <div className="bg-[#D4AF37]/10 p-4 rounded-2xl border border-[#D4AF37]/30 flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-[#D4AF37] shrink-0 mt-0.5" />
+            <div className="bg-[#B08D57]/10 p-4 rounded-2xl border border-[#B08D57]/30 flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-[#B08D57] shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-xs font-semibold text-[#D4AF37]">AI Advisory Insight</h4>
-                <p className="text-xs text-gray-300 mt-0.5 leading-relaxed">
+                <h4 className="text-xs font-semibold text-[#B08D57] font-mono uppercase">AI Advisory Insight</h4>
+                <p className="text-xs text-[#EFEAE1]/80 mt-0.5 leading-relaxed font-light">
                   "Based on the provided assumptions, this property yields a strong {calculations.grossRentalYield}% rental return and may be more suitable for long-term capital appreciation along Madurai's growth corridor."
                 </p>
               </div>

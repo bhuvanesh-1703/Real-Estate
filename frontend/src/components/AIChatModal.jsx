@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, X, Send, Bot, User, Building, ArrowRight } from 'lucide-react';
+import { Sparkles, X, Send, Bot, User, ArrowRight } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { sendAiChatAPI } from '../services/api';
 
@@ -31,7 +31,6 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
     setInput('');
     setIsTyping(true);
 
-    // Call backend AI chat endpoint
     const apiResult = await sendAiChatAPI(userText);
 
     let aiResponseText = "";
@@ -50,7 +49,6 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
         matches = PROPERTIES.slice(0, 2);
       }
     } else {
-      // Local fallback
       const queryLower = userText.toLowerCase();
       if (queryLower.includes('75') || queryLower.includes('villa')) {
         matches = PROPERTIES.filter(p => p.type === 'Villa');
@@ -73,25 +71,25 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-[#101725] border border-[#D4AF37]/30 rounded-3xl w-full max-w-xl h-[600px] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-[#16231C] border border-[#B08D57]/30 rounded-3xl w-full max-w-xl h-[600px] flex flex-col shadow-2xl overflow-hidden font-sans">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-[#0B0F17] border-b border-white/10 flex items-center justify-between">
+        <div className="px-6 py-4 bg-[#0D1410] border-b border-[#B08D57]/20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D4AF37] to-amber-200 p-[1px]">
-              <div className="w-full h-full bg-[#0B0F17] rounded-[11px] flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#B08D57] to-[#EFEAE1] p-[1px]">
+              <div className="w-full h-full bg-[#0D1410] rounded-[11px] flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-[#B08D57]" />
               </div>
             </div>
             <div>
-              <h3 className="font-heading font-semibold text-sm text-white flex items-center gap-2">
+              <h3 className="font-serif-fraunces font-semibold text-sm text-[#EFEAE1] flex items-center gap-2">
                 AI Property Advisor
-                <span className="text-[10px] bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-sans border border-[#D4AF37]/30">
+                <span className="text-[10px] bg-[#B08D57]/20 text-[#B08D57] px-2 py-0.5 rounded-full font-mono border border-[#B08D57]/30">
                   Backend API Connected
                 </span>
               </h3>
-              <p className="text-[11px] text-gray-400">Natural language search & financial consultation</p>
+              <p className="text-[11px] text-gray-400 font-mono">Natural language search & financial consultation</p>
             </div>
           </div>
           <button
@@ -110,8 +108,8 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
               className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender === 'ai' && (
-                <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-[#D4AF37]" />
+                <div className="w-8 h-8 rounded-full bg-[#B08D57]/20 border border-[#B08D57]/40 flex items-center justify-center shrink-0">
+                  <Bot className="w-4 h-4 text-[#B08D57]" />
                 </div>
               )}
 
@@ -119,8 +117,8 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
                 <div
                   className={`inline-block p-4 rounded-2xl text-xs leading-relaxed ${
                     msg.sender === 'user'
-                      ? 'bg-[#D4AF37] text-black font-medium'
-                      : 'glass-panel text-gray-200 border border-white/10'
+                      ? 'bg-[#B08D57] text-[#0D1410] font-bold'
+                      : 'glass-panel text-[#EFEAE1] border border-[#B08D57]/20'
                   }`}
                 >
                   {msg.text}
@@ -136,7 +134,7 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
                           onSelectProperty(prop);
                           onClose();
                         }}
-                        className="glass-card p-3 rounded-xl flex items-center justify-between border border-[#D4AF37]/30 hover:border-[#D4AF37] cursor-pointer group"
+                        className="glass-card p-3 rounded-xl flex items-center justify-between border border-[#B08D57]/30 hover:border-[#B08D57] cursor-pointer group"
                       >
                         <div className="flex items-center gap-3">
                           <img
@@ -145,13 +143,13 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
                             className="w-12 h-12 rounded-lg object-cover"
                           />
                           <div>
-                            <h4 className="text-xs font-bold text-white group-hover:text-[#D4AF37]">
+                            <h4 className="text-xs font-bold text-[#EFEAE1] group-hover:text-[#B08D57]">
                               {prop.title}
                             </h4>
-                            <p className="text-[10px] text-gray-400">{prop.location} • {prop.price}</p>
+                            <p className="text-[10px] text-gray-400 font-mono">{prop.location} • {prop.price}</p>
                           </div>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-[#D4AF37] group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-4 h-4 text-[#B08D57] group-hover:translate-x-1 transition-transform" />
                       </div>
                     ))}
                   </div>
@@ -168,13 +166,13 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
 
           {isTyping && (
             <div className="flex gap-3 justify-start">
-              <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center shrink-0">
-                <Bot className="w-4 h-4 text-[#D4AF37]" />
+              <div className="w-8 h-8 rounded-full bg-[#B08D57]/20 border border-[#B08D57]/40 flex items-center justify-center shrink-0">
+                <Bot className="w-4 h-4 text-[#B08D57]" />
               </div>
               <div className="glass-panel p-3 rounded-2xl text-xs text-gray-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-bounce" />
-                <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-bounce delay-150" />
-                <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full animate-bounce delay-300" />
+                <span className="w-1.5 h-1.5 bg-[#B08D57] rounded-full animate-bounce" />
+                <span className="w-1.5 h-1.5 bg-[#B08D57] rounded-full animate-bounce delay-150" />
+                <span className="w-1.5 h-1.5 bg-[#B08D57] rounded-full animate-bounce delay-300" />
               </div>
             </div>
           )}
@@ -183,17 +181,17 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSend} className="p-4 bg-[#0B0F17] border-t border-white/10 flex items-center gap-2">
+        <form onSubmit={handleSend} className="p-4 bg-[#0D1410] border-t border-[#B08D57]/20 flex items-center gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about properties, pricing, home loans..."
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#D4AF37]"
+            className="flex-1 bg-[#16231C] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#B08D57] font-mono"
           />
           <button
             type="submit"
-            className="bg-[#D4AF37] hover:bg-amber-400 text-black font-bold p-3 rounded-xl transition-all shrink-0"
+            className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-bold p-3 rounded-xl transition-all shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>

@@ -23,7 +23,7 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#0B0F17]/85 backdrop-blur-md border-b border-white/10 py-3 shadow-xl'
+          ? 'bg-[#0D1410]/90 backdrop-blur-md border-b border-[#B08D57]/20 py-3 shadow-xl'
           : 'bg-transparent py-5'
       }`}
     >
@@ -31,16 +31,16 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
         <div className="flex items-center justify-between">
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D4AF37] to-[#FFF] p-[1px]">
-              <div className="w-full h-full bg-[#0B0F17] rounded-[11px] flex items-center justify-center group-hover:bg-[#151C28] transition-colors">
-                <Building2 className="w-5 h-5 text-[#D4AF37]" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#B08D57] to-[#EFEAE1] p-[1px]">
+              <div className="w-full h-full bg-[#0D1410] rounded-[11px] flex items-center justify-center group-hover:bg-[#16231C] transition-colors">
+                <Building2 className="w-5 h-5 text-[#B08D57]" />
               </div>
             </div>
             <div>
-              <span className="font-heading font-extrabold text-xl tracking-wider text-white">
+              <span className="font-serif-fraunces font-extrabold text-xl tracking-wider text-[#EFEAE1]">
                 AETHERIA
               </span>
-              <span className="block text-[10px] uppercase tracking-widest text-gold-gradient font-medium">
+              <span className="block text-[10px] uppercase tracking-widest text-[#B08D57] font-medium font-mono">
                 Luxury Real Estate
               </span>
             </div>
@@ -50,36 +50,36 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className={`text-sm font-medium transition-colors hover:text-[#D4AF37] ${
-                location.pathname === '/' ? 'text-[#D4AF37]' : 'text-gray-300'
+              className={`text-sm font-medium transition-colors hover:text-[#B08D57] ${
+                location.pathname === '/' ? 'text-[#B08D57]' : 'text-[#EFEAE1]/80'
               }`}
             >
               Home
             </Link>
             <a
               href="#properties"
-              className="text-sm font-medium text-gray-300 transition-colors hover:text-[#D4AF37]"
+              className="text-sm font-medium text-[#EFEAE1]/80 transition-colors hover:text-[#B08D57]"
             >
               Properties
             </a>
             <a
               href="#ai-finder"
-              className="text-sm font-medium text-gray-300 transition-colors hover:text-[#D4AF37] flex items-center gap-1.5"
+              className="text-sm font-medium text-[#EFEAE1]/80 transition-colors hover:text-[#B08D57] flex items-center gap-1.5"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#B08D57]" />
               AI Match
             </a>
             <a
               href="#calculator"
-              className="text-sm font-medium text-gray-300 transition-colors hover:text-[#D4AF37]"
+              className="text-sm font-medium text-[#EFEAE1]/80 transition-colors hover:text-[#B08D57]"
             >
               Investment Calc
             </a>
             <Link
               to="/admin"
-              className="text-xs font-semibold text-gray-400 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/10 transition-colors flex items-center gap-1.5"
+              className="text-xs font-semibold text-[#EFEAE1]/80 bg-[#16231C] hover:bg-[#203127] px-3.5 py-1.5 rounded-full border border-[#B08D57]/30 transition-colors flex items-center gap-1.5"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#B08D57]" />
               CRM Portal
             </Link>
           </div>
@@ -88,14 +88,14 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
           <div className="hidden lg:flex items-center gap-4">
             <button
               onClick={onOpenAiChat}
-              className="glass-panel px-4 py-2 rounded-xl text-xs font-medium text-white hover:border-[#D4AF37]/50 transition-all flex items-center gap-2"
+              className="bg-[#16231C]/90 backdrop-blur-md border border-[#B08D57]/40 px-4 py-2 rounded-xl text-xs font-mono text-[#EFEAE1] hover:border-[#B08D57] transition-all flex items-center gap-2 shadow-lg"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] animate-pulse" />
-              AI Advisor
+              <Sparkles className="w-3.5 h-3.5 text-[#B08D57] animate-pulse" />
+              <span>AI Advisor</span>
             </button>
             <button
               onClick={onOpenBooking}
-              className="bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-black font-semibold text-xs px-5 py-2.5 rounded-xl hover:opacity-95 transition-opacity shadow-lg shadow-[#D4AF37]/20 active:scale-95"
+              className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-bold text-xs px-5 py-2.5 rounded-xl hover:opacity-95 transition-opacity shadow-lg shadow-[#B08D57]/20 active:scale-95"
             >
               Book Site Visit
             </button>
@@ -105,13 +105,13 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
           <div className="md:hidden flex items-center gap-3">
             <button
               onClick={onOpenAiChat}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-[#D4AF37]"
+              className="p-2 rounded-lg bg-[#16231C] border border-[#B08D57]/40 text-[#B08D57]"
             >
               <Sparkles className="w-5 h-5" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-white/5 text-gray-300"
+              className="p-2 rounded-lg bg-[#16231C] text-[#EFEAE1]"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -121,11 +121,11 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0B0F17]/95 border-b border-white/10 px-6 py-6 space-y-4">
+        <div className="md:hidden bg-[#0D1410]/95 border-b border-[#B08D57]/20 px-6 py-6 space-y-4">
           <Link
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-base font-medium text-white"
+            className="block text-base font-medium text-[#EFEAE1]"
           >
             Home
           </Link>
@@ -153,7 +153,7 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
           <Link
             to="/admin"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-base font-medium text-[#D4AF37]"
+            className="block text-base font-medium text-[#B08D57]"
           >
             CRM Portal (Admin)
           </Link>
@@ -164,7 +164,7 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
                 setMobileMenuOpen(false);
                 onOpenBooking();
               }}
-              className="w-full bg-[#D4AF37] text-black font-bold text-sm py-3 rounded-xl shadow-lg"
+              className="w-full bg-[#B08D57] text-[#0D1410] font-bold text-sm py-3 rounded-xl shadow-lg"
             >
               Book Site Visit
             </button>

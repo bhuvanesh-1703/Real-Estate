@@ -32,15 +32,15 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="py-20 bg-[#0B0F17] relative">
+    <section className="py-20 bg-[#0D1410] blueprint-grid relative text-[#EFEAE1]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center space-y-2 mb-12">
-          <span className="text-xs uppercase font-bold text-[#D4AF37] tracking-widest flex items-center justify-center gap-1.5">
+          <span className="text-xs uppercase font-mono font-bold text-[#B08D57] tracking-widest flex items-center justify-center gap-1.5">
             <HelpCircle className="w-3.5 h-3.5" />
             Frequently Asked Questions
           </span>
-          <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="font-serif-fraunces text-3xl sm:text-4xl font-extrabold text-[#EFEAE1]">
             Everything You Need to Know
           </h2>
         </div>
@@ -49,22 +49,22 @@ export default function FAQ() {
           {faqs.map((item, idx) => (
             <div
               key={idx}
-              className="glass-panel rounded-2xl border border-white/10 overflow-hidden transition-all"
+              className="glass-panel rounded-2xl border border-[#B08D57]/20 overflow-hidden transition-all"
             >
               <button
                 onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}
-                className="w-full p-5 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-white hover:text-[#D4AF37] transition-colors"
+                className="w-full p-5 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-[#EFEAE1] hover:text-[#B08D57] transition-colors"
               >
                 <span>{item.q}</span>
                 <ChevronDown
-                  className={`w-4 h-4 text-[#D4AF37] transition-transform duration-300 ${
+                  className={`w-4 h-4 text-[#B08D57] transition-transform duration-300 ${
                     openIdx === idx ? 'rotate-180' : ''
                   }`}
                 />
               </button>
 
               {openIdx === idx && (
-                <div className="px-5 pb-5 text-xs text-gray-300 leading-relaxed border-t border-white/5 pt-3 animate-in fade-in duration-200">
+                <div className="px-5 pb-5 text-xs text-gray-300 leading-relaxed border-t border-white/5 pt-3 animate-in fade-in duration-200 font-light">
                   {item.a}
                 </div>
               )}

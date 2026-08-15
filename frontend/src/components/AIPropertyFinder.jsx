@@ -43,39 +43,38 @@ export default function AIPropertyFinder({ onSelectProperty }) {
     setIsSearching(false);
   };
 
-
   return (
-    <section id="ai-finder" className="py-20 relative bg-[#090D14]">
+    <section id="ai-finder" className="py-20 relative bg-[#0D1410] blueprint-grid text-[#EFEAE1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#D4AF37]/10 px-3.5 py-1.5 rounded-full border border-[#D4AF37]/30 text-xs font-semibold text-[#D4AF37]">
+          <div className="inline-flex items-center gap-2 bg-[#B08D57]/10 px-3.5 py-1.5 rounded-full border border-[#B08D57]/30 text-xs font-mono font-semibold text-[#B08D57]">
             <Sparkles className="w-3.5 h-3.5" />
             INTELLIGENT MATCHMAKING ENGINE
           </div>
-          <h2 className="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="font-serif-fraunces text-3xl sm:text-5xl font-extrabold text-[#EFEAE1] tracking-tight">
             Tell Us What You’re Looking For.
           </h2>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-[#8A9186] font-light">
             Type your requirements in conversational plain language. Our neural algorithm analyzes pricing models, floor plans, and locational yield to tailor choices.
           </p>
         </div>
 
         {/* Input Interface */}
         <div className="max-w-3xl mx-auto mb-12">
-          <form onSubmit={handleAISearch} className="glass-panel p-3 rounded-2xl border border-white/10 flex flex-col sm:flex-row gap-3">
+          <form onSubmit={handleAISearch} className="glass-panel p-3 rounded-2xl border border-[#B08D57]/30 flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="e.g. 'I need a 2BHK apartment under ₹50L with high rental yield near Madurai'"
-              className="flex-1 bg-transparent px-4 py-3 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none"
+              className="flex-1 bg-transparent px-4 py-3 text-xs sm:text-sm text-[#EFEAE1] placeholder-gray-500 focus:outline-none font-mono"
             />
             <button
               type="submit"
               disabled={isSearching}
-              className="bg-[#D4AF37] hover:bg-amber-400 text-black font-bold text-xs sm:text-sm px-6 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shrink-0"
+              className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-bold text-xs sm:text-sm px-6 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shrink-0"
             >
               {isSearching ? (
                 <>
@@ -92,13 +91,13 @@ export default function AIPropertyFinder({ onSelectProperty }) {
           </form>
 
           {/* Preset Prompts */}
-          <div className="flex flex-wrap gap-2 mt-3 text-[11px] justify-center text-gray-400">
+          <div className="flex flex-wrap gap-2 mt-3 text-[11px] justify-center text-gray-400 font-mono">
             <span className="text-gray-500">Quick examples:</span>
             <button
               onClick={() => {
                 setPrompt("I need a 2BHK apartment under ₹50L.");
               }}
-              className="hover:text-[#D4AF37] transition-colors"
+              className="hover:text-[#B08D57] transition-colors"
             >
               "2BHK apartment under ₹50L"
             </button>
@@ -107,7 +106,7 @@ export default function AIPropertyFinder({ onSelectProperty }) {
               onClick={() => {
                 setPrompt("Show villas near Madurai with good road connectivity.");
               }}
-              className="hover:text-[#D4AF37] transition-colors"
+              className="hover:text-[#B08D57] transition-colors"
             >
               "Villas near Madurai"
             </button>
@@ -116,7 +115,7 @@ export default function AIPropertyFinder({ onSelectProperty }) {
               onClick={() => {
                 setPrompt("I want an investment property with high rental potential.");
               }}
-              className="hover:text-[#D4AF37] transition-colors"
+              className="hover:text-[#B08D57] transition-colors"
             >
               "High rental potential"
             </button>
@@ -125,31 +124,31 @@ export default function AIPropertyFinder({ onSelectProperty }) {
 
         {/* AI Extracted Attributes Breakdown */}
         {extractedData && (
-          <div className="glass-panel p-6 rounded-2xl border border-[#D4AF37]/30 mb-12 max-w-4xl mx-auto animate-in fade-in duration-300">
-            <h4 className="text-xs uppercase font-bold text-[#D4AF37] tracking-wider mb-4 flex items-center gap-2">
+          <div className="glass-panel p-6 rounded-2xl border border-[#B08D57]/40 mb-12 max-w-4xl mx-auto animate-in fade-in duration-300">
+            <h4 className="text-xs uppercase font-mono font-bold text-[#B08D57] tracking-wider mb-4 flex items-center gap-2">
               <Sliders className="w-4 h-4" />
               Extracted Parameters by AI Engine
             </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-xs">
-              <div className="bg-white/5 p-3 rounded-xl">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-xs font-mono">
+              <div className="bg-[#0D1410]/60 p-3 rounded-xl">
                 <span className="text-[10px] text-gray-400 block">Target Budget</span>
-                <span className="font-semibold text-white">{extractedData.budget}</span>
+                <span className="font-semibold text-[#EFEAE1]">{extractedData.budget}</span>
               </div>
-              <div className="bg-white/5 p-3 rounded-xl">
+              <div className="bg-[#0D1410]/60 p-3 rounded-xl">
                 <span className="text-[10px] text-gray-400 block">Property Type</span>
-                <span className="font-semibold text-white">{extractedData.propertyType}</span>
+                <span className="font-semibold text-[#EFEAE1]">{extractedData.propertyType}</span>
               </div>
-              <div className="bg-white/5 p-3 rounded-xl">
+              <div className="bg-[#0D1410]/60 p-3 rounded-xl">
                 <span className="text-[10px] text-gray-400 block">BHK Specs</span>
-                <span className="font-semibold text-white">{extractedData.bhk}</span>
+                <span className="font-semibold text-[#EFEAE1]">{extractedData.bhk}</span>
               </div>
-              <div className="bg-white/5 p-3 rounded-xl">
+              <div className="bg-[#0D1410]/60 p-3 rounded-xl">
                 <span className="text-[10px] text-gray-400 block">Location Zone</span>
-                <span className="font-semibold text-white">{extractedData.location}</span>
+                <span className="font-semibold text-[#EFEAE1]">{extractedData.location}</span>
               </div>
-              <div className="bg-white/5 p-3 rounded-xl col-span-2 sm:col-span-1">
+              <div className="bg-[#0D1410]/60 p-3 rounded-xl col-span-2 sm:col-span-1">
                 <span className="text-[10px] text-gray-400 block">Key Purpose</span>
-                <span className="font-semibold text-[#D4AF37]">{extractedData.purpose}</span>
+                <span className="font-semibold text-[#B08D57]">{extractedData.purpose}</span>
               </div>
             </div>
           </div>
@@ -158,8 +157,8 @@ export default function AIPropertyFinder({ onSelectProperty }) {
         {/* Recommendations Display */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="font-heading text-lg font-bold text-white flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            <h3 className="font-serif-fraunces text-lg font-bold text-[#EFEAE1] flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#5C7A63]" />
               <span>{recommendations.length} properties match your requirements</span>
             </h3>
           </div>
@@ -168,31 +167,31 @@ export default function AIPropertyFinder({ onSelectProperty }) {
             {recommendations.map((prop) => (
               <div
                 key={prop.id}
-                className="glass-card rounded-2xl p-4 border border-white/10 flex flex-col justify-between hover:border-[#D4AF37]/50 transition-all group"
+                className="glass-card rounded-2xl p-4 border border-[#B08D57]/20 flex flex-col justify-between hover:border-[#B08D57]/60 transition-all group"
               >
                 <div>
-                  <div className="relative h-48 rounded-xl overflow-hidden mb-4">
+                  <div className="relative h-48 rounded-xl overflow-hidden mb-4 bg-[#16231C]">
                     <img src={prop.image} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] text-[#D4AF37] font-semibold border border-[#D4AF37]/30">
+                    <div className="absolute top-2 right-2 bg-[#0D1410]/80 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] text-[#B08D57] font-mono font-semibold border border-[#B08D57]/40">
                       {prop.matchScore}% Match
                     </div>
                   </div>
 
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{prop.type}</span>
-                  <h4 className="font-heading font-bold text-base text-white group-hover:text-[#D4AF37] transition-colors">{prop.title}</h4>
-                  <p className="text-xs text-gray-400 mt-1">{prop.location}</p>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider font-mono font-semibold">{prop.type}</span>
+                  <h4 className="font-serif-fraunces font-bold text-base text-[#EFEAE1] group-hover:text-[#B08D57] transition-colors">{prop.title}</h4>
+                  <p className="text-xs text-gray-400 mt-1 font-mono">{prop.location}</p>
 
-                  <div className="mt-3 p-3 rounded-xl bg-white/5 border border-white/5 text-[11px] space-y-1">
-                    <span className="font-semibold text-[#D4AF37] block">Why this property?</span>
-                    <p className="text-gray-300 leading-tight">{prop.matchReason}</p>
+                  <div className="mt-3 p-3 rounded-xl bg-[#0D1410]/60 border border-white/5 text-[11px] space-y-1">
+                    <span className="font-semibold text-[#B08D57] block font-mono">Why this property?</span>
+                    <p className="text-gray-300 leading-tight font-light">{prop.matchReason}</p>
                   </div>
                 </div>
 
                 <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
-                  <span className="font-heading text-lg font-bold text-white">{prop.price}</span>
+                  <span className="font-serif-fraunces text-lg font-bold text-[#EFEAE1]">{prop.price}</span>
                   <button
                     onClick={() => onSelectProperty(prop)}
-                    className="bg-[#D4AF37] hover:bg-amber-400 text-black font-semibold text-xs px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
+                    className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-semibold text-xs px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
                   >
                     <span>View Property</span>
                     <ArrowRight className="w-3.5 h-3.5" />
