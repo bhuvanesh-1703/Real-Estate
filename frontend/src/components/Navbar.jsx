@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sparkles, Building2, Menu, X, ShieldCheck } from 'lucide-react';
+import { Sparkles, Building2, Menu, X, ShieldCheck, Mail } from 'lucide-react';
 
 export default function Navbar({ onOpenAiChat, onOpenBooking }) {
   const [scrolled, setScrolled] = useState(false);
@@ -70,6 +70,13 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
               AI Match
             </a>
             <a
+              href="#inquire"
+              className="text-sm font-medium text-[#EFEAE1]/80 transition-colors hover:text-[#B08D57] flex items-center gap-1.5"
+            >
+              <Mail className="w-3.5 h-3.5 text-[#B08D57]" />
+              Inquire
+            </a>
+            <a
               href="#calculator"
               className="text-sm font-medium text-[#EFEAE1]/80 transition-colors hover:text-[#B08D57]"
             >
@@ -95,7 +102,7 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
             </button>
             <button
               onClick={onOpenBooking}
-              className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-bold text-xs px-5 py-2.5 rounded-xl hover:opacity-95 transition-opacity shadow-lg shadow-[#B08D57]/20 active:scale-95"
+              className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-bold text-xs px-5 py-2.5 rounded-xl hover:opacity-95 transition-opacity shadow-lg shadow-[#B08D57]/20 active:scale-95 font-sans"
             >
               Book Site Visit
             </button>
@@ -135,6 +142,13 @@ export default function Navbar({ onOpenAiChat, onOpenBooking }) {
             className="block text-base font-medium text-gray-300"
           >
             Featured Properties
+          </a>
+          <a
+            href="#inquire"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-base font-medium text-[#B08D57]"
+          >
+            Direct Inquiry Form
           </a>
           <a
             href="#ai-finder"

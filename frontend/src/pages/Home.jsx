@@ -8,6 +8,7 @@ import WhyChooseUs from '../components/WhyChooseUs';
 import PremiumShowcase from '../components/PremiumShowcase';
 import InvestmentCalc from '../components/InvestmentCalc';
 import SiteVisitBooking from '../components/SiteVisitBooking';
+import LeadForm from '../components/LeadForm';
 import Testimonials from '../components/Testimonials';
 import FAQ from '../components/FAQ';
 import FinalCTA from '../components/FinalCTA';
@@ -59,16 +60,16 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
           
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold tracking-widest text-[#B08D57] inline-flex items-center gap-1">
+              <span className="text-xs uppercase font-mono font-bold tracking-widest text-[#B08D57] inline-flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 HANDPICKED LUXURY PORTFOLIO
               </span>
-              <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-white mt-1">
+              <h2 className="font-serif-fraunces text-3xl sm:text-4xl font-extrabold text-[#EFEAE1] mt-1">
                 Featured Properties
               </h2>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-xs">
+            <div className="flex flex-wrap gap-2 text-xs font-mono">
               {['All', 'Villa', 'Apartment', 'Plots', 'Independent Houses'].map((type) => (
                 <button
                   key={type}
@@ -76,7 +77,7 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
                   className={`px-4 py-2 rounded-xl font-medium transition-all ${
                     selectedCategoryFilter === type
                       ? 'bg-[#B08D57] text-[#0D1410] font-bold shadow-md'
-                      : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                      : 'bg-[#16231C] text-gray-300 hover:bg-[#203127]'
                   }`}
                 >
                   {type}
@@ -86,7 +87,7 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
           </div>
 
           {isLoading ? (
-            <div className="text-center py-12 text-gray-400">Loading properties from backend...</div>
+            <div className="text-center py-12 text-gray-400 font-mono">Loading properties from backend...</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {properties.map((prop) => (
@@ -130,6 +131,9 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
 
       {/* 9. SITE VISIT BOOKING */}
       <SiteVisitBooking />
+
+      {/* 10. DIRECT PORTFOLIO LEAD CAPTURE FORM */}
+      <LeadForm />
 
       {/* 11. TESTIMONIALS */}
       <Testimonials />
