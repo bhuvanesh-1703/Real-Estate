@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Hero from '../components/Hero';
+import HeroBlueprintReveal from '../components/HeroBlueprintReveal';
 import PropertyCard from '../components/PropertyCard';
 import AIPropertyFinder from '../components/AIPropertyFinder';
 import PropertyMap from '../components/PropertyMap';
@@ -13,7 +13,7 @@ import FAQ from '../components/FAQ';
 import FinalCTA from '../components/FinalCTA';
 import { PROPERTIES as FALLBACK_PROPERTIES } from '../data/mockData';
 import { fetchPropertiesAPI } from '../services/api';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) {
   const [favorites, setFavorites] = useState([]);
@@ -28,7 +28,6 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
       if (apiData && Array.isArray(apiData) && apiData.length > 0) {
         setProperties(apiData);
       } else {
-        // Fallback filter
         const filteredFallback = selectedCategoryFilter === 'All'
           ? FALLBACK_PROPERTIES
           : FALLBACK_PROPERTIES.filter(p => p.type === selectedCategoryFilter);
@@ -48,16 +47,10 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
   return (
     <div className="space-y-0">
       
-      {/* 1. HERO */}
-      <Hero
-        onSearchSubmit={(query) => {
-          const finderEl = document.getElementById('ai-finder');
-          finderEl?.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onExploreClick={() => {
-          const propsEl = document.getElementById('properties');
-          propsEl?.scrollIntoView({ behavior: 'smooth' });
-        }}
+      {/* 1. 3D BLUEPRINT REVEAL HERO SECTION */}
+      <HeroBlueprintReveal
+        onOpenBooking={onOpenBooking}
+        onSelectProperty={onSelectProperty}
       />
 
       {/* 2. FEATURED PROPERTIES */}
@@ -66,7 +59,7 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
           
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] inline-flex items-center gap-1">
+              <span className="text-xs uppercase font-bold tracking-widest text-[#B08D57] inline-flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 HANDPICKED LUXURY PORTFOLIO
               </span>
@@ -82,7 +75,7 @@ export default function Home({ onSelectProperty, onOpenBooking, onOpenAiChat }) 
                   onClick={() => setSelectedCategoryFilter(type)}
                   className={`px-4 py-2 rounded-xl font-medium transition-all ${
                     selectedCategoryFilter === type
-                      ? 'bg-[#D4AF37] text-black font-bold shadow-md'
+                      ? 'bg-[#B08D57] text-[#0D1410] font-bold shadow-md'
                       : 'bg-white/5 text-gray-300 hover:bg-white/10'
                   }`}
                 >
