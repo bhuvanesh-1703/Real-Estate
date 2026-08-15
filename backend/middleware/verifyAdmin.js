@@ -15,9 +15,34 @@ const verifyAdmin = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: 'Access denied. Authentication token is empty.'
+    });
+  }
+
   try {
-    const jwtSecret = process.env.JWT_SECRET || 'aetheria_secret_key_2026';
-    const decoded = jwt.verify(token, jwtSecret);
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_DB === 'true';
+    const jwtSecret = process.env.JWT_SECRET || (!isProduction ? 'aetheria_secret_key_2026' : '');
+
+    if (!jwtSecret) {
+      console.error('[Auth Error] JWT_SECRET is not configured on server.');
+      return res.status(500).json({
+        success: false,
+        message: 'Server authentication misconfigured.'
+      });
+    }
+
+    const decoded = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] });
+
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden. Admin privileges required.'
+      });
+    }
+
     req.user = decoded;
     next();
   } catch (error) {

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Property = require('../models/Property');
 
 // Fallback in-memory dataset (5 Dummy Luxury Properties)
@@ -89,7 +90,7 @@ const getProperties = async (req, res) => {
   try {
     const { type, search } = req.query;
 
-    if (Property.db && Property.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       let query = {};
       if (type && type !== 'All') query.type = type;
       if (search) query.title = { $regex: search, $options: 'i' };
@@ -117,7 +118,7 @@ const getPropertyBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
 
-    if (Property.db && Property.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       const property = await Property.findOne({ slug });
       if (!property) {
         return res.status(404).json({ success: false, message: 'Property not found' });
@@ -140,19 +141,24 @@ const getPropertyBySlug = async (req, res) => {
 const createProperty = async (req, res) => {
   try {
     const { title, price, location, type, bhk, area, status, description, image } = req.body;
+
+    if (!title || !price || !location) {
+      return res.status(400).json({ success: false, message: 'Title, price, and location are required.' });
+    }
+
     const slug = (title || 'property').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-    if (Property.db && Property.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       const newProperty = await Property.create({
         title,
         slug,
         price,
         location,
-        type,
-        bhk: Number(bhk),
+        type: type || 'Villa',
+        bhk: Number(bhk) || 0,
         area: area || '2,200 sq.ft',
         status: status || 'Available',
-        description,
+        description: description || '',
         image: image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
       });
       return res.status(201).json({ success: true, data: newProperty });
@@ -184,7 +190,10 @@ const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (Property.db && Property.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: 'Invalid property ObjectId format' });
+      }
       const updated = await Property.findByIdAndUpdate(id, req.body, { new: true });
       if (!updated) return res.status(404).json({ success: false, message: 'Property not found' });
       return res.json({ success: true, data: updated });
@@ -205,7 +214,10 @@ const deleteProperty = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (Property.db && Property.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: 'Invalid property ObjectId format' });
+      }
       const deleted = await Property.findByIdAndDelete(id);
       if (!deleted) return res.status(404).json({ success: false, message: 'Property not found' });
       return res.json({ success: true, message: 'Property deleted successfully' });

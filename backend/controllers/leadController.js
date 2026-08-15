@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Lead = require('../models/Lead');
 
 // Fallback in-memory CRM leads dataset
@@ -47,7 +48,7 @@ const calculateLeadScore = ({ phone, email, date, time, query }) => {
 // Get all leads (for CRM Portal)
 const getLeads = async (req, res) => {
   try {
-    if (Lead.db && Lead.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       const leads = await Lead.find().sort({ createdAt: -1 });
       return res.json({ success: true, count: leads.length, data: leads });
     }
@@ -74,7 +75,7 @@ const createLead = async (req, res) => {
       console.log(`[Make.com Webhook] Dispatching lead automation event for ${name}...`);
     }
 
-    if (Lead.db && Lead.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       const newLead = await Lead.create({
         name,
         phone,
@@ -121,7 +122,14 @@ const updateLeadStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (Lead.db && Lead.db.readyState === 1) {
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status field is required.' });
+    }
+
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: 'Invalid lead ObjectId format' });
+      }
       const updated = await Lead.findByIdAndUpdate(id, { status }, { new: true });
       if (!updated) return res.status(404).json({ success: false, message: 'Lead not found' });
       return res.json({ success: true, data: updated });
@@ -142,7 +150,10 @@ const deleteLead = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (Lead.db && Lead.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: 'Invalid lead ObjectId format' });
+      }
       const deleted = await Lead.findByIdAndDelete(id);
       if (!deleted) return res.status(404).json({ success: false, message: 'Lead not found' });
       return res.json({ success: true, message: 'Lead deleted' });

@@ -128,39 +128,54 @@ const dummyLeads = [
   }
 ];
 
+/**
+ * Non-destructive initial data seeding.
+ * Never deletes existing production data!
+ * Seeding occurs ONLY if process.env.SEED_DEMO_DATA === 'true'.
+ */
 const seedInitialData = async () => {
+  const shouldSeed = process.env.SEED_DEMO_DATA === 'true';
+  if (!shouldSeed) {
+    console.log('[DB Seed] Demo data seeding is disabled (SEED_DEMO_DATA is not "true"). Preserving existing database records.');
+    return;
+  }
+
   try {
-    const propertyCount = await Property.countDocuments();
-    if (propertyCount < 5) {
-      console.log('[DB Seed] Refreshing luxury real estate properties into MongoDB...');
-      await Property.deleteMany({});
-      await Property.insertMany(dummyProperties);
-      console.log('[DB Seed] 5 luxury properties seeded successfully into MongoDB.');
+    console.log('[DB Seed] SEED_DEMO_DATA is enabled. Running non-destructive seed check...');
+    
+    // Seed missing properties without calling deleteMany!
+    for (const prop of dummyProperties) {
+      const exists = await Property.findOne({ slug: prop.slug });
+      if (!exists) {
+        await Property.create(prop);
+        console.log(`[DB Seed] Inserted missing demo property: ${prop.title}`);
+      }
     }
 
-    const leadCount = await Lead.countDocuments();
-    if (leadCount < 5) {
-      console.log('[DB Seed] Refreshing sample CRM leads into MongoDB...');
-      await Lead.deleteMany({});
-      await Lead.insertMany(dummyLeads);
-      console.log('[DB Seed] 5 CRM leads seeded successfully into MongoDB.');
+    // Seed missing leads without calling deleteMany!
+    for (const lead of dummyLeads) {
+      const exists = await Lead.findOne({ email: lead.email });
+      if (!exists) {
+        await Lead.create(lead);
+        console.log(`[DB Seed] Inserted missing demo lead: ${lead.name}`);
+      }
     }
+
+    console.log('[DB Seed] Non-destructive seeding check complete.');
   } catch (err) {
     console.error('[DB Seed Error]:', err.message);
   }
 };
 
 /**
- * Safely clean and normalize candidate connection strings
+ * Safely clean and normalize connection strings
  */
 const sanitizeUri = (rawUri) => {
   if (!rawUri || typeof rawUri !== 'string') return '';
   let cleaned = rawUri.trim();
-  // Strip enclosing quotes if present
   if ((cleaned.startsWith('"') && cleaned.endsWith('"')) || (cleaned.startsWith("'") && cleaned.endsWith("'"))) {
     cleaned = cleaned.slice(1, -1).trim();
   }
-  // Strip accidental variable name prefixes (e.g. MONGODB_URI=mongodb+srv://...)
   if (cleaned.toLowerCase().startsWith('mongodb_uri=')) {
     cleaned = cleaned.slice(12).trim();
   } else if (cleaned.toLowerCase().startsWith('mongo_uri=')) {
@@ -170,11 +185,9 @@ const sanitizeUri = (rawUri) => {
 };
 
 const connectDB = async () => {
-  // Check process.env for standard variable names
   const rawUri = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.MONGODB_URL || process.env.DATABASE_URL;
   const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_DB === 'true';
 
-  // SAFE DIAGNOSTIC LOGGING (Exposes zero passwords/credentials)
   const exists = Boolean(rawUri);
   const connStr = sanitizeUri(rawUri);
   const length = connStr.length;
@@ -189,23 +202,23 @@ const connectDB = async () => {
   }
 
   if (!connStr) {
-    console.error('[DB Error] MongoDB URI is missing from process.env (checked MONGODB_URI, MONGO_URI, MONGODB_URL, DATABASE_URL).');
+    console.error('[DB Error] MONGODB_URI environment variable is missing.');
     if (isProduction) {
-      console.error('[DB Fatal] Production environment requires a valid MONGODB_URI. Failing fast.');
-      process.exit(1);
+      console.error('[DB Fatal] Production mode requires MONGODB_URI. Server startup aborted.');
+      return false;
     }
     console.warn('[DB Warning] Operating in local mock/in-memory fallback mode.');
     return false;
   }
 
   if (!startsWithStandard) {
-    console.error('[DB Error] MongoDB URI has an invalid scheme. Connection string MUST start with "mongodb://" or "mongodb+srv://".');
+    console.error('[DB Error] MONGODB_URI has an invalid scheme. Must start with "mongodb://" or "mongodb+srv://".');
     if (connStr.startsWith('http://') || connStr.startsWith('https://')) {
-      console.error('[DB Hint] Your MONGODB_URI is currently set to a web HTTP/HTTPS URL (e.g. Make.com link). Please set MONGODB_URI to a valid MongoDB Atlas connection string in Render settings.');
+      console.error('[DB Hint] MONGODB_URI appears to be an HTTP URL. Update MONGODB_URI in Render to a MongoDB Atlas connection string.');
     }
     if (isProduction) {
-      console.error('[DB Fatal] Invalid MONGODB_URI scheme in production. Failing fast.');
-      process.exit(1);
+      console.error('[DB Fatal] Invalid MONGODB_URI scheme in production. Server startup aborted.');
+      return false;
     }
     console.warn('[DB Warning] Operating in local mock/in-memory fallback mode.');
     return false;
@@ -215,7 +228,7 @@ const connectDB = async () => {
 
   try {
     const conn = await mongoose.connect(connStr, {
-      serverSelectionTimeoutMS: 5000 // 5 second timeout for fast diagnosis
+      serverSelectionTimeoutMS: 5000
     });
     console.log(`[DB] MongoDB Connected Successfully: ${conn.connection.host}`);
     
@@ -224,14 +237,14 @@ const connectDB = async () => {
   } catch (error) {
     console.error(`[DB Error] MongoDB connection failed: ${error.message}`);
     if (error.name === 'MongooseServerSelectionError') {
-      console.error('[DB Diagnosis] Network/IP Access Issue: MongoDB Atlas server was unreachable. Please verify Network Access in MongoDB Atlas (Whitelist 0.0.0.0/0 for Render).');
+      console.error('[DB Diagnosis] Network/IP Access Issue: MongoDB Atlas server was unreachable. Verify Network Access in MongoDB Atlas (Whitelist 0.0.0.0/0 for Render).');
     } else if (error.message.includes('authentication failed') || error.message.includes('bad auth')) {
-      console.error('[DB Diagnosis] Auth Issue: Incorrect database username or password. Ensure special characters in password are URL-encoded.');
+      console.error('[DB Diagnosis] Auth Issue: Incorrect database username or password. Ensure special characters are URL-encoded.');
     }
 
     if (isProduction) {
-      console.error('[DB Fatal] Production database connection failed. Failing fast.');
-      process.exit(1);
+      console.error('[DB Fatal] Production database connection failed.');
+      return false;
     }
 
     console.warn('[DB Warning] Continuing in memory fallback mode for local development.');

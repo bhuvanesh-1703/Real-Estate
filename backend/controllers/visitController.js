@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const SiteVisit = require('../models/SiteVisit');
 
 let inMemoryVisits = [
@@ -14,7 +15,7 @@ let inMemoryVisits = [
 
 const getVisits = async (req, res) => {
   try {
-    if (SiteVisit.db && SiteVisit.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       const visits = await SiteVisit.find().sort({ createdAt: -1 });
       return res.json({ success: true, count: visits.length, data: visits });
     }
@@ -35,7 +36,7 @@ const createVisit = async (req, res) => {
       });
     }
 
-    if (SiteVisit.db && SiteVisit.db.readyState === 1) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
       const newVisit = await SiteVisit.create({
         name,
         phone,
@@ -80,7 +81,14 @@ const updateVisitStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (SiteVisit.db && SiteVisit.db.readyState === 1) {
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status is required.' });
+    }
+
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, message: 'Invalid visit ObjectId format' });
+      }
       const updated = await SiteVisit.findByIdAndUpdate(id, { status }, { new: true });
       if (!updated) return res.status(404).json({ success: false, message: 'Visit booking not found' });
       return res.json({ success: true, data: updated });
