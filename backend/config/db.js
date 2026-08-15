@@ -154,11 +154,11 @@ const connectDB = async () => {
   try {
     const connStr = process.env.MONGODB_URI;
     if (!connStr) {
-      console.log('[DB] No MONGODB_URI found in environment. Operating in mock/in-memory mode.');
+      console.log('db not conected');
       return false;
     }
     const conn = await mongoose.connect(connStr);
-    console.log(`[DB] MongoDB Connected: ${conn.connection.host}`);
+    console.log(`db conected ${conn.connection.host}`);
     
     await seedInitialData();
 
