@@ -132,7 +132,7 @@ const seedInitialData = async () => {
   try {
     const propertyCount = await Property.countDocuments();
     if (propertyCount < 5) {
-      console.log('[DB Seed] Refreshing 5 luxury real estate dummy properties into MongoDB...');
+      console.log('[DB Seed] Refreshing luxury real estate properties into MongoDB...');
       await Property.deleteMany({});
       await Property.insertMany(dummyProperties);
       console.log('[DB Seed] 5 luxury properties seeded successfully into MongoDB.');
@@ -140,7 +140,7 @@ const seedInitialData = async () => {
 
     const leadCount = await Lead.countDocuments();
     if (leadCount < 5) {
-      console.log('[DB Seed] Refreshing 5 sample CRM leads into MongoDB...');
+      console.log('[DB Seed] Refreshing sample CRM leads into MongoDB...');
       await Lead.deleteMany({});
       await Lead.insertMany(dummyLeads);
       console.log('[DB Seed] 5 CRM leads seeded successfully into MongoDB.');
@@ -150,21 +150,91 @@ const seedInitialData = async () => {
   }
 };
 
+/**
+ * Safely clean and normalize candidate connection strings
+ */
+const sanitizeUri = (rawUri) => {
+  if (!rawUri || typeof rawUri !== 'string') return '';
+  let cleaned = rawUri.trim();
+  // Strip enclosing quotes if present
+  if ((cleaned.startsWith('"') && cleaned.endsWith('"')) || (cleaned.startsWith("'") && cleaned.endsWith("'"))) {
+    cleaned = cleaned.slice(1, -1).trim();
+  }
+  // Strip accidental variable name prefixes (e.g. MONGODB_URI=mongodb+srv://...)
+  if (cleaned.toLowerCase().startsWith('mongodb_uri=')) {
+    cleaned = cleaned.slice(12).trim();
+  } else if (cleaned.toLowerCase().startsWith('mongo_uri=')) {
+    cleaned = cleaned.slice(10).trim();
+  }
+  return cleaned;
+};
+
 const connectDB = async () => {
-  try {
-    const connStr = process.env.MONGODB_URI;
-    if (!connStr) {
-      console.log('db not conected');
-      return false;
+  // Check process.env for standard variable names
+  const rawUri = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.MONGODB_URL || process.env.DATABASE_URL;
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.STRICT_DB === 'true';
+
+  // SAFE DIAGNOSTIC LOGGING (Exposes zero passwords/credentials)
+  const exists = Boolean(rawUri);
+  const connStr = sanitizeUri(rawUri);
+  const length = connStr.length;
+  const startsWithStandard = connStr.startsWith('mongodb://') || connStr.startsWith('mongodb+srv://');
+
+  console.log('[DB Debug] MONGODB_URI exists:', exists);
+  if (exists) {
+    console.log('[DB Debug] URI type:', typeof connStr);
+    console.log('[DB Debug] URI length:', length);
+    console.log('[DB Debug] URI scheme:', connStr.startsWith('mongodb+srv://') ? 'mongodb+srv://' : connStr.startsWith('mongodb://') ? 'mongodb://' : 'invalid/http');
+    console.log('[DB Debug] URI starts correctly:', startsWithStandard);
+  }
+
+  if (!connStr) {
+    console.error('[DB Error] MongoDB URI is missing from process.env (checked MONGODB_URI, MONGO_URI, MONGODB_URL, DATABASE_URL).');
+    if (isProduction) {
+      console.error('[DB Fatal] Production environment requires a valid MONGODB_URI. Failing fast.');
+      process.exit(1);
     }
-    const conn = await mongoose.connect(connStr);
-    console.log(`db conected ${conn.connection.host}`);
+    console.warn('[DB Warning] Operating in local mock/in-memory fallback mode.');
+    return false;
+  }
+
+  if (!startsWithStandard) {
+    console.error('[DB Error] MongoDB URI has an invalid scheme. Connection string MUST start with "mongodb://" or "mongodb+srv://".');
+    if (connStr.startsWith('http://') || connStr.startsWith('https://')) {
+      console.error('[DB Hint] Your MONGODB_URI is currently set to a web HTTP/HTTPS URL (e.g. Make.com link). Please set MONGODB_URI to a valid MongoDB Atlas connection string in Render settings.');
+    }
+    if (isProduction) {
+      console.error('[DB Fatal] Invalid MONGODB_URI scheme in production. Failing fast.');
+      process.exit(1);
+    }
+    console.warn('[DB Warning] Operating in local mock/in-memory fallback mode.');
+    return false;
+  }
+
+  console.log('[DB Debug] Database connection attempt started...');
+
+  try {
+    const conn = await mongoose.connect(connStr, {
+      serverSelectionTimeoutMS: 5000 // 5 second timeout for fast diagnosis
+    });
+    console.log(`[DB] MongoDB Connected Successfully: ${conn.connection.host}`);
     
     await seedInitialData();
-
     return true;
   } catch (error) {
-    console.warn(`[DB Warning] MongoDB Connection failed (${error.message}). Continuing in memory fallback mode.`);
+    console.error(`[DB Error] MongoDB connection failed: ${error.message}`);
+    if (error.name === 'MongooseServerSelectionError') {
+      console.error('[DB Diagnosis] Network/IP Access Issue: MongoDB Atlas server was unreachable. Please verify Network Access in MongoDB Atlas (Whitelist 0.0.0.0/0 for Render).');
+    } else if (error.message.includes('authentication failed') || error.message.includes('bad auth')) {
+      console.error('[DB Diagnosis] Auth Issue: Incorrect database username or password. Ensure special characters in password are URL-encoded.');
+    }
+
+    if (isProduction) {
+      console.error('[DB Fatal] Production database connection failed. Failing fast.');
+      process.exit(1);
+    }
+
+    console.warn('[DB Warning] Continuing in memory fallback mode for local development.');
     return false;
   }
 };
