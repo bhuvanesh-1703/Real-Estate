@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Lead = require("../models/Lead");
-const { sendMakeLeadWebhook } = require("../services/makeWebhook");
+const { sendLeadToMake } = require("../services/makeWebhook");
 
 // Fallback in-memory CRM leads dataset
 let inMemoryLeads = [
@@ -66,7 +66,7 @@ const getLeads = async (req, res) => {
 // Create new lead (Captured from forms/chat)
 const createLead = async (req, res) => {
   try {
-    const { name, phone, email, property, date, time, query } = req.body;
+    const { name, phone, email, property, date, time, query, timeline, location, budget, message, source, notes } = req.body;
 
     if (!name || !phone) {
       return res
@@ -77,63 +77,68 @@ const createLead = async (req, res) => {
         });
     }
 
-    const score = calculateLeadScore({ phone, email, date, time, query });
+    const score = calculateLeadScore({ phone, email, date, time, query: query || message });
     const leadStatus = score >= 80 ? "HOT" : score >= 60 ? "WARM" : "COLD";
-    const createdAtIso = new Date().toISOString();
+    const leadMessage = message || query || "";
 
-    // Trigger Make.com webhook automation safely
-    sendMakeLeadWebhook({
-      name,
-      phone,
-      email: email || "",
-      property: property || "General Inquiry",
-      date: date || "",
-      time: time || "",
-      query: query || "",
-      score,
-      status: leadStatus,
-      source: source || "Website Form",
-      notes: notes || "",
-      createdAt: createdAtIso,
-    }).catch((err) => {
-      console.error("[Make.com Webhook Async Error]", err.message || err);
-    });
+    let savedLead;
 
+    // 1. Save lead to MongoDB (or fallback in-memory CRM)
     if (mongoose.connection && mongoose.connection.readyState === 1) {
-      const newLead = await Lead.create({
+      savedLead = await Lead.create({
         name,
         phone,
         email,
         property: property || "General Inquiry",
         date,
         time,
-        query,
+        query: leadMessage,
         score,
         status: leadStatus,
+        source: source || "Website Form",
+        notes,
       });
-      return res.status(201).json({
-        success: true,
-        message: "Lead captured successfully and scored.",
-        data: newLead,
-      });
+    } else {
+      savedLead = {
+        id: `LEAD-${Date.now()}`,
+        name,
+        phone,
+        email,
+        property: property || "General Inquiry",
+        date,
+        time,
+        query: leadMessage,
+        score,
+        status: leadStatus,
+        source: source || "Website Form",
+        createdDate: new Date().toISOString(),
+      };
+      inMemoryLeads.unshift(savedLead);
     }
 
-    const newInMemoryLead = {
-      id: `LEAD-${Date.now()}`,
+    // 2. Non-blocking asynchronous dispatch to Make.com Webhook
+    sendLeadToMake({
       name,
-      phone,
       email,
+      phone,
       property: property || "General Inquiry",
-      score,
-      status: leadStatus,
-      createdDate: new Date().toISOString(),
-    };
+      location,
+      message: leadMessage,
+      timeline,
+      budget,
+      source: source || "Website Form",
+      date,
+      time,
+      notes,
+    }).catch((err) => {
+      console.error("[Make Webhook] Unexpected error in async webhook call:", err.message || err);
+    });
 
-    inMemoryLeads.unshift(newInMemoryLead);
-    res.status(201).json({
+    // 3. Return standard successful response to client
+    return res.status(201).json({
       success: true,
       message: "Lead captured successfully and scored by AI pipeline.",
-      data: newInMemoryLead,
+      data: savedLead,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
