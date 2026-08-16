@@ -25,8 +25,8 @@ import {
   showAlert
 } from '../utils/swal';
 
-export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('Overview');
+export default function AdminDashboard({ initialTab = 'Overview' }) {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [leads, setLeads] = useState(MOCK_LEADS);
   const [properties, setProperties] = useState(PROPERTIES);
   const [isLoading, setIsLoading] = useState(false);

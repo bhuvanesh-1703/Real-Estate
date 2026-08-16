@@ -66,6 +66,16 @@ function MainApp() {
               }
             />
             <Route
+              path="/properties"
+              element={
+                <Home
+                  onSelectProperty={handleSelectProperty}
+                  onOpenBooking={handleOpenBooking}
+                  onOpenAiChat={() => setIsAiModalOpen(true)}
+                />
+              }
+            />
+            <Route
               path="/properties/:slug"
               element={
                 <PropertyDetails
@@ -80,7 +90,7 @@ function MainApp() {
               path="/admin"
               element={
                 <ProtectedRoute>
-                  <AdminDashboard />
+                  <AdminDashboard initialTab="Overview" />
                 </ProtectedRoute>
               }
             />
@@ -88,7 +98,7 @@ function MainApp() {
               path="/admin/dashboard"
               element={
                 <ProtectedRoute>
-                  <AdminDashboard />
+                  <AdminDashboard initialTab="Overview" />
                 </ProtectedRoute>
               }
             />
@@ -96,7 +106,31 @@ function MainApp() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <AdminDashboard />
+                  <AdminDashboard initialTab="Overview" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/properties"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard initialTab="Property Management" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/leads"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard initialTab="Lead Engine" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/leads"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard initialTab="Lead Engine" />
                 </ProtectedRoute>
               }
             />
