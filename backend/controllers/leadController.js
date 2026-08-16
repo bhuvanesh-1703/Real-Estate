@@ -1,38 +1,39 @@
-const mongoose = require('mongoose');
-const Lead = require('../models/Lead');
+const mongoose = require("mongoose");
+const Lead = require("../models/Lead");
+const { sendMakeLeadWebhook } = require("../services/makeWebhook");
 
 // Fallback in-memory CRM leads dataset
 let inMemoryLeads = [
   {
-    id: 'LEAD-101',
-    name: 'Rajesh Kumar',
-    phone: '+91 98765 43210',
-    email: 'rajesh.kumar@example.com',
-    property: 'The Grand Royale Estate',
+    id: "LEAD-101",
+    name: "Rajesh Kumar",
+    phone: "+91 98765 43210",
+    email: "rajesh.kumar@example.com",
+    property: "The Grand Royale Estate",
     score: 92,
-    status: 'HOT',
-    createdDate: new Date().toISOString()
+    status: "HOT",
+    createdDate: new Date().toISOString(),
   },
   {
-    id: 'LEAD-102',
-    name: 'Priya Sharma',
-    phone: '+91 94432 10987',
-    email: 'priya.sharma@example.com',
-    property: 'Celestial Heights Residency',
+    id: "LEAD-102",
+    name: "Priya Sharma",
+    phone: "+91 94432 10987",
+    email: "priya.sharma@example.com",
+    property: "Celestial Heights Residency",
     score: 75,
-    status: 'WARM',
-    createdDate: new Date().toISOString()
+    status: "WARM",
+    createdDate: new Date().toISOString(),
   },
   {
-    id: 'LEAD-103',
-    name: 'Vikram Sundaram',
-    phone: '+91 97890 12345',
-    email: 'vikram.s@example.com',
-    property: 'Emerald Palms Villa',
+    id: "LEAD-103",
+    name: "Vikram Sundaram",
+    phone: "+91 97890 12345",
+    email: "vikram.s@example.com",
+    property: "Emerald Palms Villa",
     score: 45,
-    status: 'COLD',
-    createdDate: new Date().toISOString()
-  }
+    status: "COLD",
+    createdDate: new Date().toISOString(),
+  },
 ];
 
 // Helper: AI Lead Scoring Algorithm (0 - 100)
@@ -52,7 +53,11 @@ const getLeads = async (req, res) => {
       const leads = await Lead.find().sort({ createdAt: -1 });
       return res.json({ success: true, count: leads.length, data: leads });
     }
-    res.json({ success: true, count: inMemoryLeads.length, data: inMemoryLeads });
+    res.json({
+      success: true,
+      count: inMemoryLeads.length,
+      data: inMemoryLeads,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -64,33 +69,52 @@ const createLead = async (req, res) => {
     const { name, phone, email, property, date, time, query } = req.body;
 
     if (!name || !phone) {
-      return res.status(400).json({ success: false, message: 'Name and Phone are required fields.' });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Name and Phone are required fields.",
+        });
     }
 
     const score = calculateLeadScore({ phone, email, date, time, query });
-    const leadStatus = score >= 80 ? 'HOT' : score >= 60 ? 'WARM' : 'COLD';
+    const leadStatus = score >= 80 ? "HOT" : score >= 60 ? "WARM" : "COLD";
+    const createdAtIso = new Date().toISOString();
 
-    // Trigger Make.com webhook automation if configured
-    if (process.env.MAKE_WEBHOOK_URL) {
-      console.log(`[Make.com Webhook] Dispatching lead automation event for ${name}...`);
-    }
+    // Trigger Make.com webhook automation safely
+    sendMakeLeadWebhook({
+      name,
+      phone,
+      email: email || "",
+      property: property || "General Inquiry",
+      date: date || "",
+      time: time || "",
+      query: query || "",
+      score,
+      status: leadStatus,
+      source: source || "Website Form",
+      notes: notes || "",
+      createdAt: createdAtIso,
+    }).catch((err) => {
+      console.error("[Make.com Webhook Async Error]", err.message || err);
+    });
 
     if (mongoose.connection && mongoose.connection.readyState === 1) {
       const newLead = await Lead.create({
         name,
         phone,
         email,
-        property: property || 'General Inquiry',
+        property: property || "General Inquiry",
         date,
         time,
         query,
         score,
-        status: leadStatus
+        status: leadStatus,
       });
       return res.status(201).json({
         success: true,
-        message: 'Lead captured successfully and scored.',
-        data: newLead
+        message: "Lead captured successfully and scored.",
+        data: newLead,
       });
     }
 
@@ -99,17 +123,17 @@ const createLead = async (req, res) => {
       name,
       phone,
       email,
-      property: property || 'General Inquiry',
+      property: property || "General Inquiry",
       score,
       status: leadStatus,
-      createdDate: new Date().toISOString()
+      createdDate: new Date().toISOString(),
     };
 
     inMemoryLeads.unshift(newInMemoryLead);
     res.status(201).json({
       success: true,
-      message: 'Lead captured successfully and scored by AI pipeline.',
-      data: newInMemoryLead
+      message: "Lead captured successfully and scored by AI pipeline.",
+      data: newInMemoryLead,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -123,20 +147,34 @@ const updateLeadStatus = async (req, res) => {
     const { status } = req.body;
 
     if (!status) {
-      return res.status(400).json({ success: false, message: 'Status field is required.' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Status field is required." });
     }
 
     if (mongoose.connection && mongoose.connection.readyState === 1) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ success: false, message: 'Invalid lead ObjectId format' });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid lead ObjectId format" });
       }
-      const updated = await Lead.findByIdAndUpdate(id, { status }, { new: true });
-      if (!updated) return res.status(404).json({ success: false, message: 'Lead not found' });
+      const updated = await Lead.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true },
+      );
+      if (!updated)
+        return res
+          .status(404)
+          .json({ success: false, message: "Lead not found" });
       return res.json({ success: true, data: updated });
     }
 
-    const idx = inMemoryLeads.findIndex(l => l.id === id);
-    if (idx === -1) return res.status(404).json({ success: false, message: 'Lead not found' });
+    const idx = inMemoryLeads.findIndex((l) => l.id === id);
+    if (idx === -1)
+      return res
+        .status(404)
+        .json({ success: false, message: "Lead not found" });
 
     inMemoryLeads[idx].status = status;
     res.json({ success: true, data: inMemoryLeads[idx] });
@@ -152,15 +190,20 @@ const deleteLead = async (req, res) => {
 
     if (mongoose.connection && mongoose.connection.readyState === 1) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ success: false, message: 'Invalid lead ObjectId format' });
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid lead ObjectId format" });
       }
       const deleted = await Lead.findByIdAndDelete(id);
-      if (!deleted) return res.status(404).json({ success: false, message: 'Lead not found' });
-      return res.json({ success: true, message: 'Lead deleted' });
+      if (!deleted)
+        return res
+          .status(404)
+          .json({ success: false, message: "Lead not found" });
+      return res.json({ success: true, message: "Lead deleted" });
     }
 
-    inMemoryLeads = inMemoryLeads.filter(l => l.id !== id);
-    res.json({ success: true, message: 'Lead deleted' });
+    inMemoryLeads = inMemoryLeads.filter((l) => l.id !== id);
+    res.json({ success: true, message: "Lead deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -170,5 +213,5 @@ module.exports = {
   getLeads,
   createLead,
   updateLeadStatus,
-  deleteLead
+  deleteLead,
 };
