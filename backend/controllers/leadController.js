@@ -145,6 +145,42 @@ const createLead = async (req, res) => {
   }
 };
 
+// Update full lead CRM entry
+const updateLead = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid lead ObjectId format" });
+      }
+      const updated = await Lead.findByIdAndUpdate(
+        id,
+        req.body,
+        { new: true }
+      );
+      if (!updated)
+        return res
+          .status(404)
+          .json({ success: false, message: "Lead not found" });
+      return res.json({ success: true, data: updated });
+    }
+
+    const idx = inMemoryLeads.findIndex((l) => l.id === id || l._id === id);
+    if (idx === -1)
+      return res
+        .status(404)
+        .json({ success: false, message: "Lead not found" });
+
+    inMemoryLeads[idx] = { ...inMemoryLeads[idx], ...req.body };
+    res.json({ success: true, data: inMemoryLeads[idx] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // Update lead CRM status
 const updateLeadStatus = async (req, res) => {
   try {
@@ -175,7 +211,7 @@ const updateLeadStatus = async (req, res) => {
       return res.json({ success: true, data: updated });
     }
 
-    const idx = inMemoryLeads.findIndex((l) => l.id === id);
+    const idx = inMemoryLeads.findIndex((l) => l.id === id || l._id === id);
     if (idx === -1)
       return res
         .status(404)
@@ -207,7 +243,7 @@ const deleteLead = async (req, res) => {
       return res.json({ success: true, message: "Lead deleted" });
     }
 
-    inMemoryLeads = inMemoryLeads.filter((l) => l.id !== id);
+    inMemoryLeads = inMemoryLeads.filter((l) => l.id !== id && l._id !== id);
     res.json({ success: true, message: "Lead deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -217,6 +253,8 @@ const deleteLead = async (req, res) => {
 module.exports = {
   getLeads,
   createLead,
+  updateLead,
   updateLeadStatus,
   deleteLead,
 };
+

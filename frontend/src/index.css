@@ -5,18 +5,18 @@
   :root {
     --font-heading: 'Fraunces', serif;
     --font-body: 'Inter', system-ui, sans-serif;
-    --color-brass-accent: #B08D57;
-    --color-sage-accent: #5C7A63;
-    --color-forest-dark: #0D1410;
-    --color-forest-card: #16231C;
-    --color-text-linen: #EFEAE1;
-    --color-text-muted: #8A9186;
+    --color-sapphire-accent: #3B82F6;
+    --color-sky-accent: #38BDF8;
+    --color-slate-dark: #0F172A;
+    --color-slate-card: #1E293B;
+    --color-text-platinum: #F8FAFC;
+    --color-text-muted: #94A3B8;
   }
 
   body {
     font-family: var(--font-body);
-    background-color: #0D1410;
-    color: #EFEAE1;
+    background-color: #0F172A;
+    color: #F8FAFC;
     overflow-x: hidden;
     scroll-behavior: smooth;
   }
@@ -26,47 +26,47 @@
   }
 
   ::selection {
-    background-color: #B08D57;
-    color: #0D1410;
+    background-color: #38BDF8;
+    color: #0F172A;
   }
 }
 
-/* Blueprint Grid Pattern Utility */
+/* Blueprint Grid Pattern Utility in Sleek Slate Blue */
 .blueprint-grid {
-  background-image: linear-gradient(to right, rgba(176, 141, 87, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(176, 141, 87, 0.08) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(56, 189, 248, 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.07) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-/* Custom Utilities for Forest + Brass Aesthetic */
+/* Custom Utilities for Sleek Dark Slate + Sapphire Aesthetic */
 .glass-panel {
-  background: rgba(22, 35, 28, 0.85);
+  background: rgba(30, 41, 59, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(176, 141, 87, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.2);
 }
 
 .glass-card {
-  background: rgba(22, 35, 28, 0.6);
+  background: rgba(30, 41, 59, 0.65);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(176, 141, 87, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.15);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  background: rgba(22, 35, 28, 0.85);
-  border-color: rgba(176, 141, 87, 0.5);
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(56, 189, 248, 0.5);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
 }
 
-.gold-gradient-text, .brass-gradient-text {
-  background: linear-gradient(135deg, #EFEAE1 0%, #B08D57 60%, #8A6D3B 100%);
+.gold-gradient-text, .brass-gradient-text, .sapphire-gradient-text {
+  background: linear-gradient(135deg, #F8FAFC 0%, #38BDF8 50%, #3B82F6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-border-glow, .brass-border-glow {
-  box-shadow: 0 0 20px rgba(176, 141, 87, 0.3);
+.gold-border-glow, .brass-border-glow, .sapphire-border-glow {
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
 }
 
 /* Custom Scrollbar */
@@ -74,12 +74,12 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0D1410;
+  background: #0F172A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #203127;
+  background: #1E293B;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B08D57;
+  background: #38BDF8;
 }

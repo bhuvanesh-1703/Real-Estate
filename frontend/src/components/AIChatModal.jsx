@@ -72,29 +72,29 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-[#16231C] border border-[#B08D57]/30 rounded-3xl w-full max-w-xl h-[600px] flex flex-col shadow-2xl overflow-hidden font-sans">
+      <div className="bg-[#1E293B] border border-slate-700/80 rounded-3xl w-full max-w-xl h-[600px] flex flex-col shadow-2xl overflow-hidden font-sans">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-[#0D1410] border-b border-[#B08D57]/20 flex items-center justify-between">
+        <div className="px-6 py-4 bg-[#0F172A] border-b border-slate-700/60 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#B08D57] to-[#EFEAE1] p-[1px]">
-              <div className="w-full h-full bg-[#0D1410] rounded-[11px] flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-[#B08D57]" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-400 p-[1px]">
+              <div className="w-full h-full bg-[#0F172A] rounded-[11px] flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-sky-400" />
               </div>
             </div>
             <div>
-              <h3 className="font-serif-fraunces font-semibold text-sm text-[#EFEAE1] flex items-center gap-2">
+              <h3 className="font-serif-fraunces font-semibold text-sm text-white flex items-center gap-2">
                 AI Property Advisor
-                <span className="text-[10px] bg-[#B08D57]/20 text-[#B08D57] px-2 py-0.5 rounded-full font-mono border border-[#B08D57]/30">
+                <span className="text-[10px] bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded-full font-mono border border-sky-500/30">
                   Backend API Connected
                 </span>
               </h3>
-              <p className="text-[11px] text-gray-400 font-mono">Natural language search & financial consultation</p>
+              <p className="text-[11px] text-slate-400 font-mono">Natural language search & financial consultation</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white p-2 rounded-lg bg-white/5"
+            className="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800"
           >
             <X className="w-5 h-5" />
           </button>
@@ -108,8 +108,8 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
               className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender === 'ai' && (
-                <div className="w-8 h-8 rounded-full bg-[#B08D57]/20 border border-[#B08D57]/40 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-[#B08D57]" />
+                <div className="w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center shrink-0">
+                  <Bot className="w-4 h-4 text-sky-400" />
                 </div>
               )}
 
@@ -117,8 +117,8 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
                 <div
                   className={`inline-block p-4 rounded-2xl text-xs leading-relaxed ${
                     msg.sender === 'user'
-                      ? 'bg-[#B08D57] text-[#0D1410] font-bold'
-                      : 'glass-panel text-[#EFEAE1] border border-[#B08D57]/20'
+                      ? 'bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold'
+                      : 'glass-panel text-slate-200 border border-slate-700 bg-[#0F172A]'
                   }`}
                 >
                   {msg.text}
@@ -134,7 +134,7 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
                           onSelectProperty(prop);
                           onClose();
                         }}
-                        className="glass-card p-3 rounded-xl flex items-center justify-between border border-[#B08D57]/30 hover:border-[#B08D57] cursor-pointer group"
+                        className="glass-card p-3 rounded-xl flex items-center justify-between border border-slate-700 hover:border-sky-500 cursor-pointer group bg-[#0F172A]/80"
                       >
                         <div className="flex items-center gap-3">
                           <img
@@ -143,37 +143,29 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
                             className="w-12 h-12 rounded-lg object-cover"
                           />
                           <div>
-                            <h4 className="text-xs font-bold text-[#EFEAE1] group-hover:text-[#B08D57]">
+                            <h4 className="text-xs font-bold text-white group-hover:text-sky-400">
                               {prop.title}
                             </h4>
-                            <p className="text-[10px] text-gray-400 font-mono">{prop.location} • {prop.price}</p>
+                            <p className="text-[10px] text-slate-400 font-mono">{prop.location} • {prop.price}</p>
                           </div>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-[#B08D57] group-hover:translate-x-1 transition-transform" />
+
+                        <div className="w-8 h-8 rounded-full bg-slate-800 text-sky-400 flex items-center justify-center group-hover:bg-sky-400 group-hover:text-slate-950 transition-colors">
+                          <ArrowRight className="w-4 h-4" />
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
-              </div>
 
-              {msg.sender === 'user' && (
-                <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-              )}
+              </div>
             </div>
           ))}
 
           {isTyping && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-8 h-8 rounded-full bg-[#B08D57]/20 border border-[#B08D57]/40 flex items-center justify-center shrink-0">
-                <Bot className="w-4 h-4 text-[#B08D57]" />
-              </div>
-              <div className="glass-panel p-3 rounded-2xl text-xs text-gray-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-[#B08D57] rounded-full animate-bounce" />
-                <span className="w-1.5 h-1.5 bg-[#B08D57] rounded-full animate-bounce delay-150" />
-                <span className="w-1.5 h-1.5 bg-[#B08D57] rounded-full animate-bounce delay-300" />
-              </div>
+            <div className="flex gap-3 items-center text-xs font-mono text-sky-400">
+              <Bot className="w-4 h-4 animate-bounce" />
+              <span>Analyzing portfolio models...</span>
             </div>
           )}
 
@@ -181,17 +173,17 @@ export default function AIChatModal({ isOpen, onClose, onSelectProperty }) {
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSend} className="p-4 bg-[#0D1410] border-t border-[#B08D57]/20 flex items-center gap-2">
+        <form onSubmit={handleSend} className="p-4 bg-[#0F172A] border-t border-slate-700/60 flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about properties, pricing, home loans..."
-            className="flex-1 bg-[#16231C] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#B08D57] font-mono"
+            placeholder="Ask AI property recommendations..."
+            className="flex-1 bg-[#1E293B] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono"
           />
           <button
             type="submit"
-            className="bg-[#B08D57] hover:bg-[#c29d63] text-[#0D1410] font-bold p-3 rounded-xl transition-all shrink-0"
+            className="bg-gradient-to-r from-blue-600 to-sky-500 text-white p-2.5 rounded-xl hover:opacity-90 transition-opacity"
           >
             <Send className="w-4 h-4" />
           </button>
