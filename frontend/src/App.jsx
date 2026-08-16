@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -6,9 +6,18 @@ import FloatingWhatsApp from './components/FloatingWhatsApp';
 import AIChatModal from './components/AIChatModal';
 import Home from './pages/Home';
 import PropertyDetails from './pages/PropertyDetails';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminLogin from './pages/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
+
+// Lazy load administrative pages for bundle optimization
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+
+const LoadingFallback = () => (
+  <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+    <div className="w-10 h-10 border-2 border-[#B08D57] border-t-transparent rounded-full animate-spin" />
+    <span className="text-xs font-mono text-[#B08D57] uppercase tracking-widest animate-pulse">Loading Aetheria Portal...</span>
+  </div>
+);
 
 function MainApp() {
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -44,37 +53,39 @@ function MainApp() {
 
       {/* Main View Routes */}
       <main className="flex-grow">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                onSelectProperty={handleSelectProperty}
-                onOpenBooking={handleOpenBooking}
-                onOpenAiChat={() => setIsAiModalOpen(true)}
-              />
-            }
-          />
-          <Route
-            path="/properties/:slug"
-            element={
-              <PropertyDetails
-                property={selectedProperty}
-                onOpenBooking={handleOpenBooking}
-                onSelectProperty={handleSelectProperty}
-              />
-            }
-          />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  onSelectProperty={handleSelectProperty}
+                  onOpenBooking={handleOpenBooking}
+                  onOpenAiChat={() => setIsAiModalOpen(true)}
+                />
+              }
+            />
+            <Route
+              path="/properties/:slug"
+              element={
+                <PropertyDetails
+                  property={selectedProperty}
+                  onOpenBooking={handleOpenBooking}
+                  onSelectProperty={handleSelectProperty}
+                />
+              }
+            />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* Footer */}
